@@ -1,0 +1,56 @@
+# copy and paste this code
+
+from time import sleep, localtime
+from math import sin, cos, pi
+import os
+
+SIZE = 13  # klokdiameter (oneven getal)
+
+def teken_klok():
+    r = SIZE // 2
+    klok = [[" " for _ in range(SIZE)] for _ in range(SIZE)]
+
+    # Klokrand tekenen
+    for y in range(SIZE):
+        for x in range(SIZE):
+            afstand = ((x - r) ** 2 + (y - r) ** 2) ** 0.5
+            if abs(afstand - r) < 0.5:
+                klok[y][x] = "o"
+
+    t = localtime()
+
+    # Hoeken berekenen
+    sec = t.tm_sec
+    minuut = t.tm_min + sec / 60
+    uur = (t.tm_hour % 12) + minuut / 60
+
+    sec_hoek = 2 * pi * sec / 60
+    min_hoek = 2 * pi * minuut / 60
+    uur_hoek = 2 * pi * uur / 12
+
+    def wijzer(hoek, lengte, teken):
+        for i in range(1, lengte + 1):
+            x = round(r + sin(hoek) * i)
+            y = round(r - cos(hoek) * i)
+            if 0 <= x < SIZE and 0 <= y < SIZE:
+                klok[y][x] = teken
+
+    wijzer(uur_hoek, r // 2, "H")
+    wijzer(min_hoek, r - 2, "M")
+    wijzer(sec_hoek, r - 1, "S")
+
+    klok[r][r] = "+"
+
+    return "\n".join("".join(rij) for rij in klok)
+
+print("Analoge Klok (Ctrl+C om te stoppen)\n")
+
+try:
+    while True:
+        os.system("cls" if os.name == "nt" else "clear")
+        print(teken_klok())
+        print("\nTijd:", f"{localtime().tm_hour:02}:{localtime().tm_min:02}:{localtime().tm_sec:02}")
+        sleep(1)
+
+except KeyboardInterrupt:
+    print("\nKlok gestopt.")
