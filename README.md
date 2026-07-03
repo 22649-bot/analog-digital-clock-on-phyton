@@ -1,2 +1,1 @@
-# analog-digital-clock-on-phyton
-this is a analog and a digital clock for phyton or i guess any other script
+copy and paste the code in phyton or smth and run then you'll get a working analog clock and a digital clock under it
